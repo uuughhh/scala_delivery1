@@ -4,7 +4,11 @@ import concurrent.ExecutionContext.Implicits.global
 import concurrent.duration.DurationInt
 
 object Main extends App {
+  new Task2A
+  new Task2D
+}
 
+class Task2A {
   // Task 2a
   def initializeThread(callback: () => Unit): Thread = {
     return new Thread(new Runnable {
@@ -13,17 +17,12 @@ object Main extends App {
       }
     })
   }
-  val thread = initializeThread(() => { println("Hello World") })
+  val thread = initializeThread(() => { println("Hello Scala World") })
   thread.run()
+}
 
+class Task2D {
   // Task 2d
-  /** A deadlock is when two or more processes are blocked forever since they
-    * are all waiting on each other. There are four necessary conditions for a
-    * deadlock: mutual exclusion, hold and wait, no preemption and circular
-    * wait. By eliminating one of the mentioned conditions, the deadlock will be
-    * eliminated
-    */
-
   /** Below is an example code of how a deadlock can occur using lazy val. Keep
     * in mind that the deadlock will sometimes occur in scala version 2, not 3.
     * In version 3, scala improved the initializion of lazy val to reduce the
