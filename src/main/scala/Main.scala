@@ -6,7 +6,7 @@ import concurrent.duration.DurationInt
 object Main extends App {
   new Task1
   new Task2A
-  new task2BC
+  new Task2BC
   new Task2D
   
 }
@@ -67,7 +67,7 @@ class Task2A {
 }
 
 // Task2 (b)(c)
-class task2BC extends Thread {
+class Task2BC extends Thread {
 
   private var counter: Int = 0
 
