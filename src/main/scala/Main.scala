@@ -1,3 +1,8 @@
+import scala.concurrent.Future
+import scala.concurrent.Await
+import concurrent.ExecutionContext.Implicits.global
+import concurrent.duration.DurationInt
+
 object Main extends App {
 
   // Task 2a
@@ -9,5 +14,47 @@ object Main extends App {
     })
   }
   val thread = initializeThread(() => { println("Hello World") })
-  // thread.run()
+  thread.run()
+
+  // Task 2d
+  /** A deadlock is when two or more processes are blocked forever since they
+    * are all waiting on each other. There are four necessary conditions for a
+    * deadlock: mutual exclusion, hold and wait, no preemption and circular
+    * wait. By eliminating one of the mentioned conditions, the deadlock will be
+    * eliminated
+    */
+
+  /** Below is an example code of how a deadlock can occur using lazy val. Keep
+    * in mind that the deadlock will sometimes occur in scala version 2, not 3.
+    * In version 3, scala improved the initializion of lazy val to reduce the
+    * risk of deadlocks. The problem in the code below is that Future
+    * initializes object A, and this very instance tries to initialize object B
+    * internally. Future also tries to initialize object B which can potentially
+    * lead to a deadlock in version 2. According to the scala docs, deadlocks
+    * can still occur in version 3 by using recursive lazy vals
+    */
+  object A {
+    lazy val initState = 25
+    lazy val start = B.initState
+  }
+
+  object B {
+    lazy val initState = A.initState
+  }
+
+  def runPotentialDeadlock() = {
+    val result = Future.sequence(
+      Seq(
+        Future {
+          A.start
+        },
+        Future {
+          B.initState
+        }
+      )
+    )
+    Await.result(result, 20.second)
+  }
+
+  runPotentialDeadlock()
 }
